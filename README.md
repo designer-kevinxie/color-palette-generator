@@ -4,7 +4,7 @@ A semantic color palette generator built with React. Pick one primary color, and
 
 セマンティックカラーパレットジェネレーター。メインカラーを1つ選ぶと、HSLカラーモデルに基づいて secondary / accent / background / foreground を含む役割ベースのパレットを自動生成します。
 
-**Live Demo:** _(coming soon)_
+**Live Demo:** https://color-palette-generator-xi-five.vercel.app/
 
 ---
 
