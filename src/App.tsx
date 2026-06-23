@@ -111,7 +111,7 @@ function hslToHex({ h, s, l }: HSL): string {
   else if (h < 240) [r, g, b] = [0, x, c];
   else if (h < 300) [r, g, b] = [x, 0, c];
   else [r, g, b] = [c, 0, x];
-  const toHex = (n) =>
+  const toHex = (n: number) =>
     Math.round((n + m) * 255)
       .toString(16)
       .padStart(2, "0");
@@ -143,6 +143,31 @@ interface ColorInputProps {
 
 interface PreviewCardProps {
   palette: Palette;
+}
+
+interface SwatchProps {
+  role: string;
+  color: HSL;
+  isCopied: boolean;
+  onCopy: (role: string, hex: string) => void;
+}
+
+function Swatch({ role, color, isCopied, onCopy }: SwatchProps) {
+  return (
+    <div
+      onClick={() => onCopy(role, hslToHex(color))}
+      className="hover:scale-105 hover:shadow-2xl transition h-50 rounded-xl p-4 flex flex-col justify-between cursor-pointer"
+      style={{
+        backgroundColor: hslToCss(color),
+        color: textColorFor(color),
+      }}
+    >
+      <span className="text-xs uppercase tracking-wide">{role}</span>
+      <span className="text-sm font-mono">
+        {isCopied ? "已复制！" : hslToHex(color)}
+      </span>
+    </div>
+  );
 }
 
 function ColorPicker({ value, onChange }: ColorPickerProps) {
@@ -220,8 +245,8 @@ function PreviewCard({ palette }: PreviewCardProps) {
 
 function ColorPalette() {
   //3个state
-  const [primaryHex, setPrimaryHex] = useState("#C16952");
-  const [hexInput, setHexInput] = useState("#C16952");
+  const [primaryHex, setPrimaryHex] = useState("#C16953");
+  const [hexInput, setHexInput] = useState("#C16953");
   const [copied, setCopied] = useState<string | null>(null);
 
   //计算出其他颜色
@@ -277,22 +302,13 @@ function ColorPalette() {
         }}
       >
         {colorsArray.map(([role, color]) => (
-          <div
+          <Swatch
             key={role}
-            onClick={() => {
-              handleCopy(role, hslToHex(color));
-            }}
-            className="hover:scale-105 hover:shadow-2xl transition h-50 rounded-xl p-4 flex flex-col justify-between cursor-pointer"
-            style={{
-              backgroundColor: hslToCss(color),
-              color: textColorFor(color),
-            }}
-          >
-            <span className="text-xs uppercase tracking-wide">{role}</span>
-            <span className="text-sm font-mono">
-              {copied === role ? "已复制！" : hslToHex(color)}
-            </span>
-          </div>
+            role={role}
+            color={color}
+            isCopied={copied === role}
+            onCopy={handleCopy}
+          />
         ))}
       </div>
       <PreviewCard palette={palette} />
