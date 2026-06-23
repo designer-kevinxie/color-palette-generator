@@ -1,3 +1,4 @@
+import "./index.css";
 import { useState } from "react";
 
 interface RGB {
@@ -140,18 +141,17 @@ interface ColorInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
+interface PreviewCardProps {
+  palette: Palette;
+}
+
 function ColorPicker({ value, onChange }: ColorPickerProps) {
   return (
     <input
       type="color"
       value={value}
       onChange={onChange}
-      style={{
-        width: "48px",
-        height: "48px",
-        border: "none",
-        cursor: "pointer",
-      }}
+      className="w-12 h-12 border-none cursor-pointer"
     />
   );
 }
@@ -162,14 +162,59 @@ function ColorInput({ value, onChange }: ColorInputProps) {
       type="text"
       value={value}
       onChange={onChange}
-      style={{
-        padding: "12px 14px",
-        fontSize: "15px",
-        fontFamily: "monospace",
-        border: "1px solid #ddd",
-        borderRadius: "8px",
-      }}
+      className="px-3.5 py-3 text-base font-mono rounded-lg border border-gray-300"
     />
+  );
+}
+
+//预览卡片
+function PreviewCard({ palette }: PreviewCardProps) {
+  return (
+    <div
+      className="flex flex-col gap-9 p-10 mt-8"
+      style={{ backgroundColor: hslToCss(palette.background) }}
+    >
+      <h2 className="text-6xl" style={{ color: hslToCss(palette.primary) }}>
+        Palette Preview
+      </h2>
+      <div
+        className="p-5 max-w-2xl space-y-3 bg-white border border-transparent hover:border-[var(--hover-color)] transition duration-200"
+        style={
+          {
+            "--hover-color": hslToCss(palette.secondary),
+          } as React.CSSProperties
+        }
+      >
+        <span
+          className="inline-block p-1 text-xs font-bold"
+          style={{
+            color: hslToCss(palette.accent),
+            border: `1px solid ${hslToCss(palette.accent)}`,
+          }}
+        >
+          NEW
+        </span>
+        <h3
+          className="text-xl font-bold"
+          style={{ color: hslToCss(palette.foreground) }}
+        >
+          This Is Heading
+        </h3>
+        <p className="text-sm" style={{ color: hslToCss(palette.foreground) }}>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+        <button
+          className="mt-3 py-2.5 px-7 cursor-pointer text-base hover:shadow-xl transition duration-200"
+          style={{
+            backgroundColor: hslToCss(palette.primary),
+            color: textColorFor(palette.primary),
+          }}
+        >
+          Action
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -214,31 +259,21 @@ function ColorPalette() {
   }
 
   return (
-    <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "48px 24px" }}>
-      <h1 style={{ fontSize: "28px", marginBottom: "8px" }}>
-        Palette Generator
-      </h1>
-      <p style={{ color: "#666", marginBottom: "32px" }}>
+    <div className="max-w-5xl mx-auto py-12 px-6">
+      <h1 className="text-3xl font-bold mb-2">Palette Generator</h1>
+      <p className="mb-8 text-neutral-500">
         Pick a primary color — the rest of the palette is derived from it.
       </p>
 
-      <div
-        style={{
-          display: "flex",
-          gap: "12px",
-          alignItems: "center",
-          marginBottom: "40px",
-        }}
-      >
+      <div className="flex gap-3 items-center mb-10">
         <ColorPicker value={primaryHex} onChange={handlePickerChange} />
         <ColorInput value={hexInput} onChange={handleHexInput} />
       </div>
 
       <div
+        className="grid gap-4"
         style={{
-          display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-          gap: "16px",
         }}
       >
         {colorsArray.map(([role, color]) => (
@@ -247,33 +282,20 @@ function ColorPalette() {
             onClick={() => {
               handleCopy(role, hslToHex(color));
             }}
+            className="hover:scale-105 hover:shadow-2xl transition h-50 rounded-xl p-4 flex flex-col justify-between cursor-pointer"
             style={{
               backgroundColor: hslToCss(color),
               color: textColorFor(color),
-              height: "200px",
-              borderRadius: "12px",
-              padding: "16px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              cursor: "pointer",
             }}
           >
-            <span
-              style={{
-                textTransform: "uppercase",
-                letterSpacing: "1px",
-                fontSize: "13px",
-              }}
-            >
-              {role}
-            </span>
-            <span style={{ fontFamily: "monospace", fontSize: "14px" }}>
+            <span className="text-xs uppercase tracking-wide">{role}</span>
+            <span className="text-sm font-mono">
               {copied === role ? "已复制！" : hslToHex(color)}
             </span>
           </div>
         ))}
       </div>
+      <PreviewCard palette={palette} />
     </div>
   );
 }
