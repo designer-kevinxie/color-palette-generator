@@ -70,7 +70,7 @@ function rgbToHsl({ r, g, b }: RGB): HSL {
   return { h, s, l };
 }
 
-function hexToHsl(hex: string): HSL {
+export function hexToHsl(hex: string): HSL {
   return rgbToHsl(hexToRgb(hex));
 }
 
@@ -78,7 +78,7 @@ function wrapHue(h: number): number {
   return ((h % 360) + 360) % 360;
 }
 
-function hslToCss({ h, s, l }: HSL): string {
+export function hslToCss({ h, s, l }: HSL): string {
   return `hsl(${h}, ${s}%, ${l}%)`; // template literal, 拼成 CSS 字符串
 }
 
@@ -91,12 +91,12 @@ function isValidHex(hex: string): boolean {
 }
 
 // L high (light swatch) -> dark text; L low (dark swatch) -> light text
-function textColorFor({ l }: HSL): string {
+export function textColorFor({ l }: HSL): string {
   return l > 55 ? "#1a1a1a" : "#ffffff";
 }
 
 // Convert an HSL object back to a hex string (for the HEX label on each swatch)
-function hslToHex({ h, s, l }: HSL): string {
+export function hslToHex({ h, s, l }: HSL): string {
   s /= 100;
   l /= 100;
   const c = (1 - Math.abs(2 * l - 1)) * s;
@@ -118,7 +118,7 @@ function hslToHex({ h, s, l }: HSL): string {
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
 }
 
-function generatePalette({ h, s, l }: HSL): Palette {
+export function generatePalette({ h, s, l }: HSL): Palette {
   const background = { h: wrapHue(h), s: 20, l: 95 };
   const foreground = { h: wrapHue(h), s: 25, l: 15 };
   const primary = { h: wrapHue(h), s, l };
@@ -131,28 +131,28 @@ function generatePalette({ h, s, l }: HSL): Palette {
 // ============================================================
 // UI layer — React components
 // ============================================================
-interface ColorPickerProps {
+export interface ColorPickerProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-interface ColorInputProps {
+export interface ColorInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-interface PreviewCardProps {
+export interface PreviewCardProps {
   palette: Palette;
 }
 
-interface SwatchProps {
+export interface SwatchProps {
   role: string;
   color: HSL;
   isCopied: boolean;
   onCopy: (role: string, hex: string) => void;
 }
 
-function Swatch({ role, color, isCopied, onCopy }: SwatchProps) {
+export function Swatch({ role, color, isCopied, onCopy }: SwatchProps) {
   return (
     <div
       onClick={() => onCopy(role, hslToHex(color))}
@@ -170,7 +170,7 @@ function Swatch({ role, color, isCopied, onCopy }: SwatchProps) {
   );
 }
 
-function ColorPicker({ value, onChange }: ColorPickerProps) {
+export function ColorPicker({ value, onChange }: ColorPickerProps) {
   return (
     <input
       type="color"
@@ -181,7 +181,7 @@ function ColorPicker({ value, onChange }: ColorPickerProps) {
   );
 }
 
-function ColorInput({ value, onChange }: ColorInputProps) {
+export function ColorInput({ value, onChange }: ColorInputProps) {
   return (
     <input
       type="text"
@@ -193,7 +193,7 @@ function ColorInput({ value, onChange }: ColorInputProps) {
 }
 
 //预览卡片
-function PreviewCard({ palette }: PreviewCardProps) {
+export function PreviewCard({ palette }: PreviewCardProps) {
   return (
     <div
       className="flex flex-col gap-9 p-10 mt-8"
