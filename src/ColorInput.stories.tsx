@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ColorInput } from "./App";
+import { ColorInput } from "./components/ColorInput";
 
 const meta: Meta<typeof ColorInput> = {
   title: "Components/ColorInput",

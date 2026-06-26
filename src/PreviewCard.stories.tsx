@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { PreviewCard, generatePalette, hexToHsl } from "./App";
+import { PreviewCard } from "./components/PreviewCard";
+import { generatePalette, hexToHsl } from "./colors";
 
 const meta: Meta<typeof PreviewCard> = {
   title: "Components/PreviewCard",
