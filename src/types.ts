@@ -16,5 +16,4 @@ export interface Palette {
   accent: HSL;
   background: HSL;
   foreground: HSL;
-  //          ↑ 每个角色的值都是一个 HSL 对象
 }

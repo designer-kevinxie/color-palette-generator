@@ -105,3 +105,16 @@ export function generatePalette({ h, s, l }: HSL): Palette {
 
   return { background, foreground, primary, secondary, accent };
 }
+
+// colors.ts 里加一个新函数(它属于逻辑层,放这儿合适)
+export function paletteToCssVars(palette: Palette) {
+  const vars = Object.entries(palette).reduce(
+    (acc, [role, color]) => {
+      acc[`--color-${role}`] = hslToCss(color);
+      return acc;
+    },
+    {} as Record<string, string>,
+  );
+  vars["--color-on-primary"] = textColorFor(palette.primary);
+  return vars;
+}

@@ -1,6 +1,11 @@
 import "./index.css";
 import { useState } from "react";
-import { hexToHsl, isValidHex, generatePalette } from "./colors";
+import {
+  hexToHsl,
+  isValidHex,
+  generatePalette,
+  paletteToCssVars,
+} from "./colors";
 import { ColorPicker } from "./components/ColorPicker";
 import { ColorInput } from "./components/ColorInput";
 import { Swatch } from "./components/Swatch";
@@ -19,6 +24,7 @@ function ColorPalette() {
   //计算出其他颜色
   const palette = generatePalette(hexToHsl(primaryHex));
   const colorsArray = Object.entries(palette);
+  const cssVars = paletteToCssVars(palette);
 
   //处理输入事件
 
@@ -50,7 +56,7 @@ function ColorPalette() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto py-12 px-6">
+    <div className="max-w-5xl mx-auto py-12 px-6" style={cssVars}>
       <h1 className="text-3xl font-bold mb-2">Palette Generator</h1>
       <p className="mb-8 text-neutral-500">
         Pick a primary color — the rest of the palette is derived from it.
@@ -77,7 +83,7 @@ function ColorPalette() {
           />
         ))}
       </div>
-      <PreviewCard palette={palette} />
+      <PreviewCard />
     </div>
   );
 }
